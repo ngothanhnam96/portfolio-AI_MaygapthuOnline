@@ -4,7 +4,7 @@ A script for showing the claw-machine game to a customer, in a live demo or a sc
 video. It runs about **3 minutes**. Shorter versions for a quick pitch or a social post are at
 the end.
 
-> **Live link:** https://ngothanhnam96.github.io/portfolio-AI_GapThu/
+> **Live link:** https://ngothanhnam96.github.io/portfolio-AI_MaygapthuOnline/
 > (check before presenting)
 
 ---
@@ -161,7 +161,7 @@ Use these when the customer asks questions.
 > 📒 A collection book with 12 original plush toys
 > 📱 Works on phone and desktop, nothing to install
 >
-> Play it here: https://ngothanhnam96.github.io/portfolio-AI_GapThu/
+> Play it here: https://ngothanhnam96.github.io/portfolio-AI_MaygapthuOnline/
 > Want a machine with your own characters or prizes? Message me.
 
 ### Bài đăng tiếng Việt
@@ -177,4 +177,4 @@ Use these when the customer asks questions.
 > 🔥 Combo, gắp đôi, thú tự lăn vào máng
 > 📒 Bộ sưu tập 12 bé thú bông
 >
-> Chơi ngay: https://ngothanhnam96.github.io/portfolio-AI_GapThu/
+> Chơi ngay: https://ngothanhnam96.github.io/portfolio-AI_MaygapthuOnline/

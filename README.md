@@ -92,4 +92,4 @@ npm test     # 46 tests, about a second, no dependencies
 
 ## Licence
 
-MIT — see [LICENSE](LICENSE).
+GPL-3.0 — see [LICENSE](LICENSE).
