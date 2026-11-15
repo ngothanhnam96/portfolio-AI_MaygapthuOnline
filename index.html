@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Gắp Thú · Máy gắp thú góc chợ đêm</title>
+  <meta name="description" content="Gắp Thú: trò chơi máy gắp thú bông ngay trên trình duyệt, với bốn máy theo chủ đề chợ đêm, tiệm game, Trung Thu và Tết.">
+  <meta name="theme-color" content="#120d20">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main id="app">
+    <section id="home" class="screen">
+      <header class="brand">
+        <h1><span class="neon-word">Gắp</span> <span class="neon-word alt">Thú</span></h1>
+        <p>Máy gắp thú bông góc chợ đêm. Canh càng, bỏ xu, mang thú về nhà!</p>
+      </header>
+      <div class="player-row">
+        <p id="greeting" class="greeting"></p>
+        <label class="name-field">Tên của bạn
+          <input id="name-input" maxlength="16" autocomplete="nickname" placeholder="Nhập tên…">
+        </label>
+      </div>
+      <div id="resume"></div>
+      <div id="cabinets" class="cabinets"></div>
+      <div class="home-actions">
+        <button class="btn" id="book-btn">📒 Bộ sưu tập</button>
+        <button class="btn" id="howto-btn">❓ Cách chơi</button>
+      </div>
+      <footer class="foot">Vẽ hoàn toàn bằng SVG, âm thanh tổng hợp bằng WebAudio. Không cần cài đặt.</footer>
+    </section>
+
+    <section id="play" class="screen" hidden>
+      <div class="hud">
+        <button class="icon-btn" id="back-btn" aria-label="Về trang chủ">←</button>
+        <strong id="hud-name" class="hud-name"></strong>
+        <span class="hud-item" title="Xu còn lại">🪙 <b id="hud-coins">0</b></span>
+        <span class="hud-item" title="Điểm">⭐ <b id="hud-score">0</b></span>
+        <span class="hud-item" title="Combo cho lần gắp trúng tiếp theo">🔥 <b id="hud-combo">×1</b></span>
+        <span class="hud-item" title="Thời gian ngắm">⏱ <b id="hud-time">15s</b></span>
+        <button class="icon-btn" id="pause-btn" aria-label="Tạm dừng">⏸</button>
+        <button class="icon-btn" id="sound-btn" aria-label="Âm thanh">🔊</button>
+      </div>
+      <div class="machine">
+        <svg id="stage" role="img" aria-label="Máy gắp thú. Kéo hoặc chạm để di chuyển càng."></svg>
+        <div id="toast" class="toast" role="status" aria-live="polite"></div>
+      </div>
+      <div class="controls">
+        <button class="ctrl" id="left-btn" aria-label="Sang trái">◀</button>
+        <button class="ctrl drop" id="drop-btn">THẢ</button>
+        <button class="ctrl" id="right-btn" aria-label="Sang phải">▶</button>
+      </div>
+      <p class="keys-hint">← → để di chuyển · Space để thả · P để tạm dừng</p>
+    </section>
+
+    <section id="book" class="screen" hidden>
+      <div class="book-head">
+        <button class="icon-btn" id="book-back" aria-label="Quay lại">←</button>
+        <h2>📒 Bộ sưu tập <span id="book-count"></span></h2>
+      </div>
+      <div id="book-grid" class="book-grid"></div>
+    </section>
+  </main>
+
+  <div id="modal" class="modal" hidden>
+    <div class="modal-card" id="modal-body" role="dialog" aria-modal="true"></div>
+  </div>
+
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>
