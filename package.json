@@ -1,0 +1,15 @@
+{
+  "name": "gap-thu",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Gắp Thú - a browser claw-machine game with plush toys, seeded 2D physics and four themed Vietnamese cabinets.",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "start": "node scripts/serve.mjs",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
