@@ -4,6 +4,7 @@
 // physics radius r is drawn with <use> at 3r × 3r. Every id starts with "gt-".
 
 import { BOX } from "../core/physics.js";
+import { esc } from "../core/text.js";
 import { RARITY, TOYS } from "../core/toys.js";
 
 export const TOY_BOX = 120; // symbol viewBox size
@@ -228,11 +229,148 @@ const DECOR = {
     });
     return out;
   },
+
+  // ------------------------------------------------- seasonal backdrops (src/core/events.js)
+
+  tet: (t) => `${DECOR.blossoms(t)}
+    ${[[150, 120], [360, 170]].map(([x, y], i) => `<line x1="${x}" y1="70" x2="${x}" y2="${y - 22}" stroke="#ffd23f" stroke-opacity=".5"/>
+      <g class="sway" style="animation-delay:${i * 0.8}s"><ellipse cx="${x}" cy="${y}" rx="20" ry="24" fill="#e8202a" stroke="#ffd23f" stroke-width="1.6"/>
+      <rect x="${x - 10}" y="${y - 28}" width="20" height="6" rx="2" fill="#ffd23f"/><rect x="${x - 10}" y="${y + 22}" width="20" height="6" rx="2" fill="#ffd23f"/>
+      <path d="M${x} ${y + 28} v14" stroke="#ffd23f" stroke-width="2"/>
+      <text x="${x}" y="${y + 7}" text-anchor="middle" font-size="18" font-weight="800" fill="#ffd23f" font-family="serif">福</text></g>`).join("")}`,
+
+  hearts: () => [[140, 110, 1.2, "#ff6fae"], [210, 180, 0.8, "#ff9ac8"], [300, 100, 1.6, "#ff3f8a"], [370, 200, 1], [250, 260, 0.9, "#ffc2e0"],
+    [160, 300, 0.7, "#ff6fae"], [340, 300, 1.1, "#ff3f8a"]].map(([x, y, s, c = "#ff8fb8"], i) =>
+    `<g class="float" style="animation-delay:${f(i * 0.45)}s"><path transform="translate(${x} ${y}) scale(${s})" d="${HEART}" fill="${c}" opacity=".85"/></g>`).join(""),
+
+  flowers: () => {
+    const heads = [[180, 130, "#ff5f8f"], [220, 100, "#ffd84a"], [262, 92, "#ff8ad0"], [302, 108, "#ff5f8f"], [338, 140, "#ffffff"], [240, 150, "#ffb347"], [290, 158, "#ff8ad0"]];
+    let out = heads.map(([x, y]) => `<path d="M260 330 Q${f((x + 260) / 2)} ${y + 90} ${x} ${y + 14}" fill="none" stroke="#3a8a3a" stroke-width="3"/>`).join("");
+    out += heads.map(([x, y, c]) => `<path d="M${x - 12} ${y} Q${x - 14} ${y + 18} ${x} ${y + 20} Q${x + 14} ${y + 18} ${x + 12} ${y} L${x + 6} ${y + 8} L${x} ${y - 4} L${x - 6} ${y + 8}Z" fill="${c}" stroke="#000" stroke-opacity=".15"/>`).join("");
+    out += `<path d="M232 300 L288 300 L272 350 L248 350Z" fill="#f4e0ff" opacity=".85"/>
+      <path d="M248 318 q12 10 24 0 M260 318 l-14 22 M260 318 l14 22" fill="none" stroke="#ff5fa8" stroke-width="3" stroke-linecap="round"/>`;
+    return out;
+  },
+
+  flag: () => `<g transform="translate(0 22)"><line x1="330" y1="56" x2="330" y2="330" stroke="#d8d8e0" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="330" cy="54" r="5" fill="#ffd23f"/>
+    <g class="wave"><path d="M184 66 Q220 56 257 66 T330 66 L330 160 Q293 150 257 160 T184 160Z" fill="#da251d"/>
+    <polygon points="${star(257, 113, 28, 0.38)}" fill="#ffde00"/></g></g>
+    ${firework(150, 230, 34, "#ffd23f", 0)}${firework(230, 210, 26, "#ff6a5a", 0.9)}${firework(370, 250, 28, "#fff4c2", 1.7)}`,
+
+  balloons: () => [[150, 150, "#ff5a5a"], [200, 110, "#ffd84a"], [250, 150, "#7fe0ff"], [300, 100, "#9dff8a"], [350, 140, "#ff7ab0"], [225, 200, "#c49aff"]]
+    .map(([x, y, c], i) => `<g class="float" style="animation-delay:${f(i * 0.5)}s">
+      <path d="M${x} ${y + 34} q-8 30 4 60 q10 30 -2 60" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="1.4"/>
+      <ellipse cx="${x}" cy="${y}" rx="24" ry="30" fill="${c}"/><path d="M${x - 4} ${y + 30} h8 l-4 6z" fill="${c}"/>
+      <ellipse cx="${x - 8}" cy="${y - 10}" rx="6" ry="9" fill="#fff" opacity=".35"/></g>`).join(""),
+
+  halloween: () => {
+    let out = `<circle cx="300" cy="110" r="48" fill="#ffe9a8"/><circle cx="300" cy="110" r="66" fill="#ffe9a8" opacity=".12"/>`;
+    out += [[180, 90, 1], [230, 140, 0.7], [360, 70, 0.8], [260, 70, 0.6]].map(([x, y, s], i) =>
+      `<g class="float" style="animation-delay:${i * 0.6}s"><path transform="translate(${x} ${y}) scale(${s})" d="M0 0 C-8 -10 -18 -8 -26 -14 C-22 -4 -24 4 -30 8 C-20 4 -10 6 0 12 C10 6 20 4 30 8 C24 4 22 -4 26 -14 C18 -8 8 -10 0 0Z" fill="#120a18"/></g>`).join("");
+    out += [[150, 300, 1], [350, 290, 1.25]].map(([x, y, s]) => `<g transform="translate(${x} ${y}) scale(${s})">
+      <ellipse cx="-14" cy="0" rx="16" ry="22" fill="#e86a10"/><ellipse cx="14" cy="0" rx="16" ry="22" fill="#e86a10"/><ellipse cx="0" cy="0" rx="18" ry="24" fill="#ff8a1e"/>
+      <path d="M-2 -24 q2 -10 8 -12" fill="none" stroke="#3a6a2a" stroke-width="4" stroke-linecap="round"/>
+      <path d="M-14 -6 l6 -8 l6 8z M2 -6 l6 -8 l6 8z M-12 8 l4 4 l4 -4 l4 4 l4 -4 l4 4 l4 -4" fill="#ffe08a" stroke="#ffe08a" stroke-width="1.5"/></g>`).join("");
+    return out;
+  },
+
+  teacher: () => `<rect x="130" y="72" width="240" height="132" rx="6" fill="#1f4a34" stroke="#8a5a2a" stroke-width="8"/>
+    <text x="250" y="124" text-anchor="middle" font-size="28" font-style="italic" font-weight="700" fill="#f4f1e0" font-family="Georgia, serif">Tri ân Thầy Cô</text>
+    <text x="250" y="168" text-anchor="middle" font-size="24" fill="#ffe08a" font-family="Georgia, serif">20 · 11</text>
+    <path d="M150 190 h40 M300 190 h50" stroke="#f4f1e0" stroke-opacity=".4" stroke-width="2"/>
+    <rect x="300" y="196" width="28" height="6" rx="2" fill="#fff"/>
+    ${[[160, 262, "#ff4a5a"], [182, 252, "#ff8ad0"], [172, 278, "#ffd84a"]].map(([x, y, c]) => `<path d="M${x} ${y + 10} q-4 30 8 60" fill="none" stroke="#3a8a3a" stroke-width="3"/>
+      <circle cx="${x}" cy="${y}" r="11" fill="${c}"/><circle cx="${x}" cy="${y}" r="5" fill="#000" opacity=".15"/>`).join("")}
+    <g transform="rotate(-6 340 280)"><rect x="306" y="262" width="70" height="14" rx="2" fill="#3a6aa8"/><rect x="310" y="276" width="64" height="14" rx="2" fill="#c8402e"/><rect x="304" y="290" width="72" height="14" rx="2" fill="#e8b04a"/></g>`,
+
+  culture: () => {
+    const cx = 250;
+    const cy = 168;
+    let out = `<circle cx="${cx}" cy="${cy}" r="96" fill="#6a4a22" opacity=".9"/>`;
+    out += [94, 80, 62, 44].map((r) => `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#e0b25a" stroke-width="2" stroke-opacity=".8"/>`).join("");
+    for (let i = 0; i < 14; i++) {
+      const a = (i / 14) * Math.PI * 2;
+      const p = (r, da) => `${f(cx + Math.cos(a + da) * r)},${f(cy + Math.sin(a + da) * r)}`;
+      out += `<polygon points="${p(40, 0)} ${p(12, 0.16)} ${p(12, -0.16)}" fill="#ffd27a"/>`;
+    }
+    out += `<circle cx="${cx}" cy="${cy}" r="12" fill="#ffd27a"/>`;
+    // Lạc birds flying round the drum face, between the two outer rings.
+    for (let i = 0; i < 8; i++) {
+      const a = (i / 8) * Math.PI * 2;
+      const x = f(cx + Math.cos(a) * 71);
+      const y = f(cy + Math.sin(a) * 71);
+      out += `<path transform="translate(${x} ${y}) rotate(${f((a * 180) / Math.PI + 90)})" d="M-8 2 Q-3 -4 0 0 Q3 -4 8 2 M0 0 v6" fill="none" stroke="#ffe7a8" stroke-width="1.8" stroke-linecap="round"/>`;
+    }
+    // Two nón lá.
+    out += [[140, 300, 1], [365, 290, 0.8]].map(([x, y, s]) => `<g transform="translate(${x} ${y}) scale(${s})">
+      <path d="M-34 0 L0 -22 L34 0Z" fill="#f1dca0" stroke="#b8975a"/>
+      <path d="M-22 -7 L22 -7 M-12 -14 L12 -14" stroke="#b8975a" stroke-width="1"/></g>`).join("");
+    return out;
+  },
+
+  noel: () => {
+    let out = `<path d="M180 72 a30 30 0 1 0 22 48 a24 24 0 1 1 -22 -48z" fill="#fff4c2" opacity=".9"/>`;
+    out += `<rect x="322" y="290" width="16" height="26" fill="#6a3a1a"/>
+      <polygon points="330,92 290,170 370,170" fill="#1f6a3a"/><polygon points="330,140 280,230 380,230" fill="#1a5a32"/>
+      <polygon points="330,196 270,296 390,296" fill="#164e2c"/>
+      <polygon points="${star(330, 88, 14, 0.42)}" fill="#ffd84a" class="bulb"/>`;
+    out += [[318, 160, "#ff4a4a"], [344, 205, "#ffd84a"], [304, 222, "#7fe0ff"], [352, 262, "#ff4a4a"], [300, 276, "#ffd84a"], [330, 250, "#ff7ab0"]]
+      .map(([x, y, c], i) => `<circle class="bulb" style="animation-delay:${f(i * 0.27)}s" cx="${x}" cy="${y}" r="6" fill="${c}"/>`).join("");
+    out += [[150, 270, "#d81f3c", "#ffd84a"], [196, 286, "#2a7ad8", "#fff"]].map(([x, y, c, r]) =>
+      `<rect x="${x}" y="${y}" width="36" height="30" rx="3" fill="${c}"/><rect x="${x + 15}" y="${y}" width="6" height="30" fill="${r}"/>
+      <path d="M${x + 18} ${y} q-10 -12 -14 0 M${x + 18} ${y} q10 -12 14 0" fill="none" stroke="${r}" stroke-width="2.5"/>`).join("");
+    for (let i = 0; i < 18; i++) {
+      const x = 104 + ((i * 97) % 290);
+      const y = 40 + ((i * 53) % 160);
+      out += `<circle class="snow" style="animation-delay:${f(-(i * 0.71) % 6)}s" cx="${x}" cy="${y}" r="${2 + (i % 3)}" fill="#fff" opacity=".8"/>`;
+    }
+    return out;
+  },
+
+  newyear: (t, skin) => {
+    const year = (skin?.year ?? 2026) + 1;
+    let out = `${firework(170, 110, 40, "#ffd84a", 0)}${firework(320, 90, 34, "#ff7ab0", 0.7)}${firework(250, 190, 30, "#9ad8ff", 1.4)}${firework(360, 220, 24, "#9dff8a", 2)}`;
+    out += `<text x="250" y="300" text-anchor="middle" font-size="64" font-weight="900" fill="none" stroke="${t.neon}" stroke-width="2.5" class="neon-text" font-family="system-ui, sans-serif">${year}</text>`;
+    out += `<g transform="translate(140 250)"><circle r="26" fill="#fff4c2" stroke="#ffd84a" stroke-width="3"/>
+      <path d="M0 0 V-18 M0 0 L-2 -16" stroke="#2a1a24" stroke-width="3" stroke-linecap="round"/><circle r="3" fill="#2a1a24"/></g>`;
+    return out;
+  },
 };
 
-/** The back of the machine: wall, decoration, floor. */
-export function cabinetBack(cab) {
-  const t = cab.theme;
+const HEART = "M0 6 C-4 -2 -14 -2 -14 6 C-14 12 -6 16 0 22 C6 16 14 12 14 6 C14 -2 4 -2 0 6Z";
+
+/** A firework: rays round a centre that burst out, fade and repeat. */
+function firework(cx, cy, r, color, delay) {
+  let rays = "";
+  for (let i = 0; i < 12; i++) {
+    const a = (i / 12) * Math.PI * 2;
+    rays += `<line x1="${f(cx + Math.cos(a) * r * 0.3)}" y1="${f(cy + Math.sin(a) * r * 0.3)}" x2="${f(cx + Math.cos(a) * r)}" y2="${f(cy + Math.sin(a) * r)}" stroke="${color}" stroke-width="2.5" stroke-linecap="round"/>`;
+  }
+  return `<g class="firework" style="animation-delay:${delay}s">${rays}<circle cx="${cx}" cy="${cy}" r="3" fill="#fff"/></g>`;
+}
+
+/** Every decoration name, so content tests can check each theme names a real one. */
+export const DECORS = Object.keys(DECOR);
+
+/** A machine's colours, with a seasonal backdrop's colours on top when one is on. */
+export function themeOf(cab, skin = null) {
+  return skin ? { ...cab.theme, ...skin.event.theme } : cab.theme;
+}
+
+/** The seasonal banner hung under the rail: "🥁 Ngày Văn hóa Việt Nam · 24/11". */
+function eventBanner(skin, t) {
+  const text = `${skin.event.banner}${skin.day ? ` · ${skin.day}/${skin.month}` : ""}`;
+  const w = Math.min(300, 40 + text.length * 8.6);
+  return `<g class="event-banner">
+    <rect x="${f(250 - w / 2)}" y="40" width="${f(w)}" height="26" rx="13" fill="#000" fill-opacity=".45" stroke="${t.neon}" stroke-opacity=".7"/>
+    <text x="250" y="58" text-anchor="middle" font-size="14" font-weight="700" fill="${t.neon}" font-family="system-ui, sans-serif">${esc(text)}</text>
+  </g>`;
+}
+
+/** The back of the machine: wall, decoration, floor. `skin` is an optional seasonal backdrop. */
+export function cabinetBack(cab, skin = null) {
+  const t = themeOf(cab, skin);
   return `<defs>
       <linearGradient id="gt-wall" x1="0" y1="0" x2="0" y2="1">
         <stop offset="0" stop-color="${t.wall2}"/><stop offset="1" stop-color="${t.wall}"/>
@@ -246,14 +384,15 @@ export function cabinetBack(cab) {
       </linearGradient>
     </defs>
     <rect x="0" y="0" width="${BOX.width}" height="${BOX.floor}" fill="url(#gt-wall)"/>
-    ${DECOR[t.decor](t)}
+    ${DECOR[t.decor](t, skin)}
+    ${skin ? eventBanner(skin, t) : ""}
     <rect x="${BOX.divider}" y="${BOX.floor - 6}" width="${BOX.width - BOX.divider}" height="10" fill="${t.floor}"/>
     <rect x="0" y="${BOX.floor - 2}" width="${BOX.divider}" height="8" fill="#05040a"/>`;
 }
 
 /** The glass, the chute, the rail and the front panel, drawn over the toys. */
-export function cabinetFront(cab) {
-  const t = cab.theme;
+export function cabinetFront(cab, skin = null) {
+  const t = themeOf(cab, skin);
   return `<rect x="${BOX.divider - 3}" y="${BOX.dividerTop}" width="6" height="${BOX.floor - BOX.dividerTop}" fill="#bfe8ff" opacity=".35"/>
     <rect x="${BOX.divider - 3}" y="${BOX.dividerTop}" width="6" height="3" fill="#e8f8ff" opacity=".8"/>
     <rect x="0" y="0" width="${BOX.width}" height="${BOX.floor}" fill="url(#gt-glass)" pointer-events="none"/>

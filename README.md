@@ -48,6 +48,12 @@ the chick is tiny, the elephant is heavy, and the satin carp slips.
 - **Saving:** best score and stars per machine, the collection and your name are saved.
   Leaving mid-round saves the exact state, mid-swing included, and the home screen offers
   **Chơi tiếp**.
+- **Seasonal backdrops (Phông sự kiện):** the home screen shows the next Vietnamese event with
+  a countdown, and the 🎉 button dresses any machine for it. 13 events: Tết, Valentine, 8/3,
+  30/4 & 1/5, 1/6, Trung Thu, 2/9, 20/10, Halloween, 20/11 (Nhà giáo), 24/11 (Ngày Văn hóa
+  Việt Nam), Noel and New Year's Eve. Choose **Tự động** to always follow the next event, pick
+  one by hand, or turn it off. The backdrop only changes the art: toys and rules stay the
+  machine's own. It can be changed mid-round from the 🎉 button in the top bar.
 - **Phones:** the machine scales to the screen, with big touch buttons under it.
   Reduced-motion settings are respected.
 
@@ -55,7 +61,7 @@ the chick is tiny, the elephant is heavy, and the satin carp slips.
 
 ```bash
 npm start    # http://127.0.0.1:5173
-npm test     # 46 tests, about a second, no dependencies
+npm test     # 54 tests, about a second, no dependencies
 ```
 
 ## What the tests prove
@@ -77,6 +83,10 @@ npm test     # 46 tests, about a second, no dependencies
   - The score always equals the sum of its explained lines.
 - **Artwork:** every toy, machine and the claw is well-formed SVG with unique, prefixed ids,
   and every `url(#…)` and `href="#…"` points to something real.
+- **Seasonal backdrops:** the next event is right on known days (20/11, 24/11, Noel's two
+  days, New Year's Eve running into 1 January, Tết 2027), something is under 100 days away on
+  every day from 2026 to 2030, the lunar table covers 2026–2030, every machine draws
+  well-formed in every backdrop, and junk settings fall back to no backdrop.
 - **Safety:** the player's name is escaped wherever it reaches the markup.
 
 ## Docs

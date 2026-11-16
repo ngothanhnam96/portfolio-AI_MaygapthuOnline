@@ -1,6 +1,6 @@
 # 04 · Testing
 
-`npm test` runs `node --test`: 46 tests in about a second, no dependencies.
+`npm test` runs `node --test`: 54 tests in about a second, no dependencies.
 
 | Suite | What it proves |
 |-------|----------------|
@@ -10,6 +10,7 @@
 | `score.test.js` | Combo multiplier and cap, rarity points, lucky and double lines, clear bonus, star thresholds |
 | `progress.test.js` | Collection counts and new toys, best score only improves, no mutation, unlock order, titles, junk saves cleaned, name trimming |
 | `art.test.js` | Every toy symbol and icon is well-formed with prefixed, unique ids; every `url(#…)` and `href="#…"` resolves; every machine draws well-formed with its marquee; the claw has the parts the stage animates; the catalogue and machine mixes are consistent |
+| `events.test.js` | Every event has a unique id, a real decoration, valid colours and real dates; the lunar table covers 2026–2030; the next event and its countdown are right on known days (including Noel's two days, New Year's Eve into 1 January and Tết 2027); on every day of 2026–2030 an event is under 100 days away and the list is sorted; saved settings resolve, junk falls back to off; every machine in every backdrop is well-formed, shows the banner and keeps its own name |
 | `text.test.js` | `esc()` neutralises markup; the player's name only reaches HTML through `esc()` |
 
 The test bot (`tests/support/bot.js`) glides over the easiest uncovered toy, waits for the

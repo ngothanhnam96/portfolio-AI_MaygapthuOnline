@@ -13,6 +13,7 @@
 - [x] Keyboard, on-screen buttons and drag-to-aim
 - [x] Tests for rules, physics, determinism, winnability, art and escaping
 - [x] CI and GitHub Pages workflows
+- [x] Seasonal backdrops for 13 Vietnamese events, with the next one and a countdown on the home screen
 
 ## Next
 
@@ -21,3 +22,5 @@
 - [ ] Optional cookie-free analytics (round start and end per machine)
 - [ ] More machines (Hội An lantern street, a beach kiosk)
 - [ ] Haptics on phones when the claw closes
+- [ ] Extend the lunar dates (Tết, Trung Thu) in `src/core/events.js` past 2030
+- [ ] Event machines with their own toys (a Santa bear, a lì xì pig) that appear only during the event

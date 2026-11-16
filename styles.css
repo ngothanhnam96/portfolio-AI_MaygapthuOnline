@@ -112,6 +112,30 @@ button { font: inherit; color: inherit; }
 .stars { color: #ffd84a; letter-spacing: 1px; }
 .stars .off { color: #4a4066; }
 
+.event-strip {
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 14px 0; padding: 12px 16px;
+  border-radius: var(--radius); border: 1px solid color-mix(in srgb, var(--ev) 55%, transparent);
+  background: linear-gradient(120deg, var(--ev-wall2), var(--ev-wall));
+}
+.ev-icon { font-size: 34px; line-height: 1; }
+.ev-text { flex: 1 1 220px; display: flex; flex-direction: column; min-width: 0; }
+.ev-text b { color: var(--ev); }
+.ev-text small { color: var(--muted); }
+.ev-list { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; text-align: left; }
+.ev-option {
+  display: flex; align-items: center; gap: 12px; width: 100%; padding: 8px 12px; cursor: pointer;
+  border-radius: 14px; border: 1px solid var(--line); background: var(--card);
+}
+.ev-option:hover { background: #2d2350; }
+.ev-option.current { border-color: var(--good); box-shadow: 0 0 0 1px var(--good) inset; }
+.ev-swatch {
+  flex: none; width: 42px; height: 42px; display: grid; place-items: center; font-size: 22px; border-radius: 10px;
+  background: linear-gradient(160deg, var(--ev-wall2, #3a2f5c), var(--ev-wall, #231a3d));
+  border: 2px solid var(--ev, var(--line));
+}
+.ev-label { display: flex; flex-direction: column; min-width: 0; }
+.ev-label small { color: var(--muted); }
+
 .home-actions { display: flex; gap: 12px; justify-content: center; margin: 24px 0 8px; flex-wrap: wrap; }
 .foot { text-align: center; color: var(--muted); font-size: 13px; margin: 16px 0; }
 
@@ -123,7 +147,7 @@ button { font: inherit; color: inherit; }
   width: 100%; max-width: 560px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
   padding: 8px; border-radius: var(--radius); background: rgba(0, 0, 0, .3); border: 1px solid var(--line);
 }
-.hud-name { flex: 1 1 120px; color: var(--neon); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hud-name { flex: 1 1 0; min-width: 0; color: var(--neon); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .hud-item { background: var(--card); border-radius: 10px; padding: 6px 10px; font-size: 14px; white-space: nowrap; }
 .hud-item.hurry { background: #6a1a2a; animation: pulse .5s infinite alternate; }
 @keyframes pulse { to { transform: scale(1.06); } }
@@ -142,6 +166,14 @@ button { font: inherit; color: inherit; }
 .sway { transform-box: fill-box; transform-origin: 50% 0; animation: sway 3s ease-in-out infinite; }
 @keyframes sway { 0%, 100% { transform: rotate(-6deg); } 50% { transform: rotate(6deg); } }
 .claw-led { animation: blink .8s infinite; }
+.snow { animation: snow 6s linear infinite; }
+@keyframes snow { from { transform: translateY(-60px); } to { transform: translateY(280px); opacity: 0; } }
+.firework { transform-box: fill-box; transform-origin: center; animation: firework 2.6s ease-out infinite; }
+@keyframes firework { 0% { transform: scale(.15); opacity: 0; } 15% { opacity: 1; } 70% { transform: scale(1); opacity: .9; } 100% { transform: scale(1.12); opacity: 0; } }
+.float { animation: float 3.6s ease-in-out infinite alternate; }
+@keyframes float { from { transform: translateY(6px); } to { transform: translateY(-10px); } }
+.wave { transform-box: fill-box; transform-origin: 100% 50%; animation: wave 2.8s ease-in-out infinite; }
+@keyframes wave { 0%, 100% { transform: skewY(0deg); } 50% { transform: skewY(-3deg); } }
 
 .pop text { font-weight: 900; font-size: 26px; fill: #fff; stroke: #2a1300; stroke-width: 4px; paint-order: stroke; }
 .pop { animation: rise 1.4s ease-out forwards; }
@@ -215,7 +247,9 @@ button { font: inherit; color: inherit; }
   #app { padding: 10px 16px; }
   .hud { gap: 6px; }
   .hud-item { padding: 5px 8px; font-size: 13px; }
-  .hud-name { flex-basis: 100%; order: -1; }
+  /* Two rows: the name with the three icon buttons, then back and the counters. */
+  .hud-name { flex: 1 1 calc(100% - 3 * 46px); order: -2; }
+  #event-hud-btn, #pause-btn, #sound-btn { order: -1; }
   .ctrl { height: 58px; }
   #stage { max-height: calc(100vh - 260px); }
   .keys-hint { display: none; }

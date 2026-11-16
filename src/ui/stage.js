@@ -10,18 +10,19 @@ const NS = "http://www.w3.org/2000/svg";
 const deg = (rad) => (rad * 180) / Math.PI;
 const f = (n) => Math.round(n * 100) / 100;
 
-export function mountStage(svg, game) {
+/** `skin` is an optional seasonal backdrop (see src/core/events.js); it only changes the art. */
+export function mountStage(svg, game, skin = null) {
   const cab = cabinetById(game.cabinetId);
   const toys = game.bodies.map((b, i) => {
     const s = b.r * TOY_SCALE;
     return `<g class="toy" data-i="${i}"><use href="#gt-toy-${b.toy}" x="${-s}" y="${-s}" width="${2 * s}" height="${2 * s}"/></g>`;
   }).join("");
   svg.setAttribute("viewBox", `-16 -48 ${BOX.width + 32} ${BOX.floor + 120}`);
-  svg.innerHTML = `${cabinetBack(cab)}
+  svg.innerHTML = `${cabinetBack(cab, skin)}
     <line id="gt-guide" x1="0" y1="0" x2="0" y2="${BOX.floor}" stroke="#fff" stroke-opacity=".28" stroke-width="2" stroke-dasharray="4 7"/>
     <g id="gt-toys">${toys}</g>
     ${clawSvg()}
-    ${cabinetFront(cab)}
+    ${cabinetFront(cab, skin)}
     <g id="gt-fx"></g>`;
   const view = {
     svg,

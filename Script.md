@@ -50,6 +50,14 @@ machines.
 > fair. Each has its own coins, its own claw strength and its own toys. One star opens the
 > next machine, so players always have something to chase."
 
+**Action:** point to the **Sự kiện sắp tới** strip, then press **🎉 Thêm phông sự kiện** and
+choose the next event (for example Ngày Văn hóa Việt Nam, 24/11, or Giáng sinh).
+
+> "The machine also dresses up for the season. The home screen always shows the next
+> Vietnamese holiday with a countdown: Teachers' Day, Culture Day, Christmas, New Year, Tết.
+> One tap and every machine gets that event's backdrop. It can follow the calendar by
+> itself, so the game always looks current, which is perfect for a campaign."
+
 **Action:** click **Góc Chợ Đêm**.
 
 ---
@@ -130,9 +138,10 @@ Use these when the customer asks questions.
 | "Can it use our characters or products?" | Yes. Each toy is one entry (size, weight, grip, rarity) plus one SVG drawing, and each machine is one entry with its coins, claw strength, toy mix and theme. |
 | "Can it give real prizes or vouchers?" | The rules are already separate from the screen, so a prize table or voucher codes can be attached to rarities. Real prizes would need a server check, which is the next step. |
 | "Does it need an app?" | No. It runs in any modern browser, on desktop or phone. No install, no login. |
+| "Can it match our campaign or the season?" | Yes. 13 Vietnamese events are built in (Tết, 8/3, 30/4, 1/6, Trung Thu, 2/9, 20/10, 20/11, 24/11, Noel, New Year and more), and it can switch by itself to the next one. A new event is one entry plus one SVG decoration, so a brand's own campaign day fits the same way. |
 | "Is it heavy?" | No dependencies, no build step, no image files. The art is SVG and the sound is synthesised. |
 | "Is it fair? Can we tune it?" | Every machine has a claw-strength setting, and every toy has weight and grip. The game is seeded, so any round can be replayed exactly to check it. |
-| "How do we know it works?" | 46 automated tests check that every toy can be won, that three stars are reachable on every machine, that the physics stays stable, and that saved rounds resume exactly. |
+| "How do we know it works?" | 54 automated tests check that every toy can be won, that three stars are reachable on every machine, that the physics stays stable, and that saved rounds resume exactly. |
 | "Can people play with a keyboard?" | Yes: arrow keys to move, Space to drop, P to pause. Every button can be reached with Tab. |
 
 ---

@@ -73,6 +73,19 @@ A round is plain data, including the RNG state, so `snapshot()` is `JSON.stringi
 `restore()` checks the version and the machine. The page saves after every drop, on pause, on
 `pagehide` and when the tab is hidden. The home screen then offers **Chơi tiếp**.
 
+## Seasonal backdrops
+
+`src/core/events.js` lists 13 events. Fixed dates repeat every year; Tết and Trung Thu
+follow the lunar calendar, so their solar dates come from a table (2026–2030) that has to be
+extended later. Days are whole calendar days in the player's time zone, so an event never
+shifts by one day. An event lasts `days` days (Noel 24–25/12, New Year 31/12–1/1, Tết three
+days), and it stays "next" until its last day ends.
+
+The setting is `off`, `auto` (follow the next event) or one event's id, saved as
+`gapthu:backdrop`. A backdrop overrides the machine's colours and decoration and hangs a
+banner under the rail; the toys, coins and claw stay the machine's own, so stars and records
+are unaffected. Switching mid-round freezes the machine, redraws the art and carries on.
+
 ## Art
 
 Each toy is a `<symbol>` with its body a circle of radius 40 in a 120-unit box, so a toy with

@@ -2,6 +2,9 @@
 // to the page.
 
 import { CABINETS, cabinetById } from "./core/cabinets.js";
+import {
+  countdownLabel, dateLabel, dayNumber, eventById, nextEvent, resolveBackdrop, today, upcoming,
+} from "./core/events.js";
 import { AIM_TIME, DT, canDrop, createGame, drop, restore, setAim, snapshot, step, summary } from "./core/game.js";
 import { BOX } from "./core/physics.js";
 import {
@@ -10,7 +13,7 @@ import {
 import { BONUS, multiplier } from "./core/score.js";
 import { esc } from "./core/text.js";
 import { RARITY, TOYS, toyById } from "./core/toys.js";
-import { sharedDefs, toyIcon } from "./ui/art.js";
+import { sharedDefs, themeOf, toyIcon } from "./ui/art.js";
 import { isMuted, setMuted, sfx } from "./ui/audio.js";
 import { drawStage, machineX, mountStage, popText, sparkle } from "./ui/stage.js";
 import { load, loadRaw, remove, save } from "./ui/storage.js";
@@ -27,6 +30,24 @@ let acc = 0;
 let paused = false;
 let keys = { left: false, right: false };
 let lastTick = -1;
+
+// Seasonal backdrop: "off", "auto" (whatever event comes next) or one event's id.
+// ?today=YYYY-MM-DD pretends it is another day, and ?backdrop=<id|auto> shows a backdrop
+// without saving it, to preview a season.
+let backdrop = cleanBackdrop(params.get("backdrop") ?? load("backdrop", "off"));
+const fakeToday = /^(\d{4})-(\d{2})-(\d{2})$/.exec(params.get("today") ?? "");
+
+function cleanBackdrop(value) {
+  return value === "auto" || eventById(value) ? value : "off";
+}
+
+function day() {
+  return fakeToday ? dayNumber(+fakeToday[1], +fakeToday[2], +fakeToday[3]) : today();
+}
+
+function currentSkin() {
+  return resolveBackdrop(backdrop, day());
+}
 
 setMuted(load("muted", false));
 document.body.insertAdjacentHTML("afterbegin", `<svg class="defs" aria-hidden="true" width="0" height="0">${sharedDefs()}</svg>`);
@@ -54,6 +75,7 @@ function renderHome() {
         <button class="btn primary" id="resume-btn">▶ Chơi tiếp</button></div>`
     : "";
   if (saved) $("resume-btn").onclick = () => startGame(saved.cabinetId, saved);
+  renderEventStrip();
 
   $("cabinets").innerHTML = CABINETS.map((cab, i) => {
     const open = isUnlocked(progress, i);
@@ -80,6 +102,72 @@ function renderHome() {
   show("home");
 }
 
+function renderEventStrip() {
+  const next = nextEvent(day());
+  const skin = currentSkin();
+  if (!next) {
+    $("event-strip").innerHTML = "";
+    return;
+  }
+  const t = next.event.theme;
+  $("event-strip").innerHTML = `<div class="event-strip" style="--ev:${t.neon};--ev-wall:${t.wall};--ev-wall2:${t.wall2}">
+      <span class="ev-icon" aria-hidden="true">${next.event.icon}</span>
+      <div class="ev-text">
+        <b>Sự kiện sắp tới: ${esc(next.event.name)}</b>
+        <span>${esc(dateLabel(next))} · ${esc(countdownLabel(next))}</span>
+        <small>${skin ? `Phông nền đang bật: ${skin.event.icon} ${esc(skin.event.name)}${backdrop === "auto" ? " (tự động)" : ""}` : "Phông nền sự kiện đang tắt"}</small>
+      </div>
+      <button class="btn primary" id="event-btn">🎉 ${skin ? "Đổi phông nền" : "Thêm phông sự kiện"}</button>
+    </div>`;
+  $("event-btn").onclick = pickBackdrop;
+}
+
+/** The backdrop picker. During a round the machine freezes until a choice is made. */
+function pickBackdrop() {
+  const playing = game && game.status === "playing" && !$("play").hidden;
+  if (playing) {
+    paused = true;
+    cancelAnimationFrame(raf);
+  }
+  const list = upcoming(day());
+  const next = list[0];
+  const option = (value, icon, title, sub, theme) => `<button class="ev-option${backdrop === value ? " current" : ""}" data-backdrop="${value}"
+      aria-pressed="${backdrop === value}"${theme ? ` style="--ev:${theme.neon};--ev-wall:${theme.wall};--ev-wall2:${theme.wall2}"` : ""}>
+      <span class="ev-swatch" aria-hidden="true">${icon}</span>
+      <span class="ev-label"><b>${esc(title)}</b><small>${esc(sub)}</small></span>
+    </button>`;
+  openModal(`<h2>🎉 Phông nền sự kiện</h2>
+    <p class="muted">Trang trí máy gắp theo ngày lễ. Thú bông và luật chơi vẫn giữ nguyên.</p>
+    <div class="ev-list">
+      ${option("auto", "✨", "Tự động: sự kiện sắp tới", next ? `Bây giờ là ${next.event.name} · ${dateLabel(next)}` : "", next?.event.theme)}
+      ${list.map((o) => option(o.event.id, o.event.icon, o.event.name, `${dateLabel(o)} · ${countdownLabel(o)}`, o.event.theme)).join("")}
+      ${option("off", "🚫", "Tắt phông nền", "Dùng trang trí gốc của từng máy")}
+    </div>
+    <div class="actions"><button class="btn" id="ev-close">Đóng</button></div>`);
+  const done = () => {
+    closeModal();
+    if (playing && game) {
+      view = mountStage($("stage"), game, currentSkin());
+      document.body.style.setProperty("--neon", themeOf(cabinetById(game.cabinetId), currentSkin()).neon);
+      paused = false;
+      loop();
+    } else {
+      renderEventStrip();
+    }
+  };
+  for (const b of document.querySelectorAll("[data-backdrop]")) {
+    b.onclick = () => {
+      backdrop = cleanBackdrop(b.dataset.backdrop);
+      save("backdrop", backdrop);
+      const skin = currentSkin();
+      done();
+      toast(skin ? `Đã treo phông ${skin.event.icon} ${skin.event.name}!` : "Đã tắt phông nền sự kiện.", skin ? "good" : "");
+    };
+  }
+  $("ev-close").onclick = done;
+  (document.querySelector(".ev-option.current") ?? $("ev-close")).focus();
+}
+
 function renderBook() {
   $("book-count").textContent = `${collected(progress)}/${TOYS.length}`;
   $("book-grid").innerHTML = TOYS.map((toy) => {
@@ -101,15 +189,16 @@ function startGame(cabinetId, resumed = null) {
   const seed = params.has("seed") ? Number(params.get("seed")) : (Date.now() ^ (Math.random() * 1e9)) >>> 0;
   game = resumed ?? createGame(cabinetId, seed);
   if (resumed) remove("round");
-  view = mountStage($("stage"), game);
+  const skin = currentSkin();
+  view = mountStage($("stage"), game, skin);
   $("hud-name").textContent = cabinetById(game.cabinetId).name;
-  document.body.style.setProperty("--neon", cabinetById(game.cabinetId).theme.neon);
+  document.body.style.setProperty("--neon", themeOf(cabinetById(game.cabinetId), skin).neon);
   show("play");
   paused = false;
   keys = { left: false, right: false };
   closeModal();
   updateHud();
-  if (!resumed) toast("Bỏ xu rồi! Di chuyển càng và bấm THẢ.");
+  if (!resumed) toast(skin ? `${skin.event.icon} ${skin.event.banner}! Di chuyển càng và bấm THẢ.` : "Bỏ xu rồi! Di chuyển càng và bấm THẢ.");
   else toast("Chào mừng trở lại, ván chơi vẫn còn nguyên.");
   loop();
 }
@@ -336,6 +425,7 @@ $("book-back").onclick = renderHome;
 $("howto-btn").onclick = howTo;
 $("back-btn").onclick = leave;
 $("pause-btn").onclick = pause;
+$("event-hud-btn").onclick = pickBackdrop;
 $("drop-btn").onclick = doDrop;
 
 function syncSound() {
@@ -397,6 +487,7 @@ if (params.has("debug")) {
   window.__gt = {
     get game() { return game; },
     progress: () => progress,
+    skin: () => currentSkin(),
     coins: (n) => { if (game) game.coins = n; },
     unlockAll: () => {
       for (const c of CABINETS) progress.best[c.id] ??= { score: 0, stars: 1 };
